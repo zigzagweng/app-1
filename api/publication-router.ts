@@ -84,23 +84,25 @@ export const publicationRouter = createRouter({
       }
 
       const db = getDb();
-      const [{ id }] = await db
-        .insert(publications)
-        .values({
-          userId: input.userId,
-          pmid: input.pmid,
-          title: input.title,
-          authors: input.authors,
-          journal: input.journal,
-          year: input.year,
-          volume: input.volume || null,
-          issue: input.issue || null,
-          pages: input.pages || null,
-          doi: input.doi || null,
-          nlmCitation: input.nlmCitation,
-          impactFactor: input.impactFactor ? input.impactFactor : null,
-        })
-        .returning();
+     const result = await db
+  .insert(publications)
+  .values({
+    userId: input.userId,
+    pmid: input.pmid,
+    title: input.title,
+    authors: input.authors,
+    journal: input.journal,
+    year: input.year,
+    volume: input.volume || null,
+    issue: input.issue || null,
+    pages: input.pages || null,
+    doi: input.doi || null,
+    nlmCitation: input.nlmCitation,
+    impactFactor: input.impactFactor ? input.impactFactor : null,
+  })
+  .returning({ id: publications.id });
+
+const id = result[0]?.id;
 
       const newPub = await db.query.publications.findFirst({
         where: eq(publications.id, id),
