@@ -100,7 +100,7 @@ export const publicationRouter = createRouter({
           nlmCitation: input.nlmCitation,
           impactFactor: input.impactFactor ? input.impactFactor : null,
         })
-        .returning({ id: publications.id });
+        .returning();
 
       const newPub = await db.query.publications.findFirst({
         where: eq(publications.id, id),

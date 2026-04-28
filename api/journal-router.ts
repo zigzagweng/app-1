@@ -75,7 +75,7 @@ export const journalRouter = createRouter({
             impactFactor: input.impactFactor ? input.impactFactor : null,
             year: input.year || null,
           })
-          .returning({ id: journalImpactFactors.id });
+          .returning();
 
         return db.query.journalImpactFactors.findFirst({
           where: eq(journalImpactFactors.id, id),
