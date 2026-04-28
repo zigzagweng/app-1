@@ -1,18 +1,15 @@
-import { drizzle } from "drizzle-orm/mysql2";
-import { env } from "../lib/env";
-import * as schema from "@db/schema";
-import * as relations from "@db/relations";
+import { drizzle } from "drizzle-orm/node-postgres";
+import { Pool } from "pg";
+import * as schema from "../../db/schema";
 
-const fullSchema = { ...schema, ...relations };
+const connectionString = process.env.DATABASE_URL;
+if (!connectionString) {
+  throw new Error("DATABASE_URL is required");
+}
 
-let instance: ReturnType<typeof drizzle<typeof fullSchema>>;
+const pool = new Pool({ connectionString });
+const db = drizzle(pool, { schema });
 
 export function getDb() {
-  if (!instance) {
-    instance = drizzle(env.databaseUrl, {
-      mode: "planetscale",
-      schema: fullSchema,
-    });
-  }
-  return instance;
+  return db;
 }
