@@ -84,7 +84,7 @@ export const publicationRouter = createRouter({
       }
 
       const db = getDb();
-     const result = await db
+     await db
   .insert(publications)
   .values({
     userId: input.userId,
@@ -99,17 +99,16 @@ export const publicationRouter = createRouter({
     doi: input.doi || null,
     nlmCitation: input.nlmCitation,
     impactFactor: input.impactFactor ? input.impactFactor : null,
-  })
-  .returning({ id: publications.id });
+  });
 
-const id = result[0]?.id;
+// 查询刚插入的记录
+const newPub = await db.query.publications.findFirst({
+  where: eq(publications.pmid, input.pmid),
+  orderBy: [desc(publications.createdAt)],
+  with: { author: true },
+});
 
-      const newPub = await db.query.publications.findFirst({
-        where: eq(publications.id, id),
-        with: { author: true },
-      });
-
-      return newPub;
+return newPub;
     }),
 
   // Update publication

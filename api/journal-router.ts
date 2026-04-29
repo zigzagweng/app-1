@@ -67,21 +67,18 @@ export const journalRouter = createRouter({
           where: eq(journalImpactFactors.id, existing.id),
         });
       } else {
-        const result = await db
+await db
   .insert(journalImpactFactors)
   .values({
     journalName: input.journalName,
     issn: input.issn || null,
     impactFactor: input.impactFactor ? input.impactFactor : null,
     year: input.year || null,
-  })
-  .returning({ id: journalImpactFactors.id });
+  });
 
-const id = result[0]?.id;
-
-        return db.query.journalImpactFactors.findFirst({
-          where: eq(journalImpactFactors.id, id),
-        });
+return db.query.journalImpactFactors.findFirst({
+  where: eq(journalImpactFactors.journalName, input.journalName),
+});
       }
     }),
 
