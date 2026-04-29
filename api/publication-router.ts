@@ -11,7 +11,6 @@ export const publicationRouter = createRouter({
   list: authedQuery.query(async () => {
     const db = getDb();
     const results = await db.query.publications.findMany({
-      with: { author: true },
       orderBy: [desc(publications.year)],
     });
     return results;
@@ -24,7 +23,6 @@ export const publicationRouter = createRouter({
       const db = getDb();
       const results = await db.query.publications.findMany({
         where: eq(publications.userId, input.userId),
-        with: { author: true },
         orderBy: [desc(publications.year)],
       });
       return results;
@@ -105,7 +103,6 @@ export const publicationRouter = createRouter({
 const newPub = await db.query.publications.findFirst({
   where: eq(publications.pmid, input.pmid),
   orderBy: [desc(publications.createdAt)],
-  with: { author: true },
 });
 
 return newPub;
@@ -181,7 +178,6 @@ return newPub;
 
       const updated = await db.query.publications.findFirst({
         where: eq(publications.id, input.id),
-        with: { author: true },
       });
 
       return updated;
